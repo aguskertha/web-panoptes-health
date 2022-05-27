@@ -1,23 +1,12 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const moment = require('moment');
-const deviceSchema = new Schema({
+const roomShcema = new Schema({
     name: {
         type: String,
         required: true
     },
-    code: {
-        type: String,
-        required: true
-    },
-    deviceIP: {
-        type: String,
-        required: true
-    },
-    status: {
-        type: Boolean,
-        required: true
-    },
+
     createdAt: {
         type: String
     },
@@ -26,16 +15,16 @@ const deviceSchema = new Schema({
     }
 });
 
-deviceSchema.pre('save', function(next){
+roomShcema.pre('save', function(next){
     this.createdAt = moment().format();
     this.updatedAt = moment().format();
     next();
 });
 
-deviceSchema.pre('updateOne', function(next){
+roomShcema.pre('updateOne', function(next){
     this.update({},{ $set: { updatedAt: moment().format() } });
     next();
 });
 
-const Device = mongoose.model('Device', deviceSchema);
-module.exports = Device;
+const Room = mongoose.model('Room', roomShcema);
+module.exports = Room;

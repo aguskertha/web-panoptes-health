@@ -2,7 +2,11 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const moment = require('moment');
 const sensorSchema = new Schema({
-    code: {
+    bedID: {
+        type: String,
+        required: true
+    },
+    deviceID: {
         type: String,
         required: true
     },

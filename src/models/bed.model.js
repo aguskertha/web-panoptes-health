@@ -1,23 +1,22 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const moment = require('moment');
-const deviceSchema = new Schema({
+const bedSchema = new Schema({
     name: {
         type: String,
         required: true
     },
-    code: {
+    roomID: {
         type: String,
         required: true
     },
-    deviceIP: {
+    deviceID: {
         type: String,
-        required: true
     },
-    status: {
-        type: Boolean,
-        required: true
+    patientID: {
+        type: String,
     },
+    
     createdAt: {
         type: String
     },
@@ -26,16 +25,16 @@ const deviceSchema = new Schema({
     }
 });
 
-deviceSchema.pre('save', function(next){
+bedSchema.pre('save', function(next){
     this.createdAt = moment().format();
     this.updatedAt = moment().format();
     next();
 });
 
-deviceSchema.pre('updateOne', function(next){
+bedSchema.pre('updateOne', function(next){
     this.update({},{ $set: { updatedAt: moment().format() } });
     next();
 });
 
-const Device = mongoose.model('Device', deviceSchema);
-module.exports = Device;
+const Bed = mongoose.model('Bed', bedSchema);
+module.exports = Bed;

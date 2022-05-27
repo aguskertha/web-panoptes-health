@@ -1,8 +1,8 @@
 const router = require('express').Router();
-const { registerDevice, connectDeviceToPatient, disconnectDeviceToPatient } = require('./../controllers/device.controller');
+const { registerDevice, disconnectDeviceToBed, connectDeviceToBed } = require('./../controllers/device.controller');
 
 router.post('/', registerDevice);
-router.post('/connect', connectDeviceToPatient);
-router.post('/disconnect', disconnectDeviceToPatient);
+router.post('/connect', connectDeviceToBed);
+router.post('/disconnect', disconnectDeviceToBed);
 
 module.exports = router;
