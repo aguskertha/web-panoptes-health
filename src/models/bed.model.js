@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const mongoosePaginate = require('mongoose-paginate-v2');
 const Schema = mongoose.Schema;
 const moment = require('moment');
 const bedSchema = new Schema({
@@ -35,6 +36,6 @@ bedSchema.pre('updateOne', function(next){
     this.update({},{ $set: { updatedAt: moment().format() } });
     next();
 });
-
+bedSchema.plugin(mongoosePaginate);
 const Bed = mongoose.model('Bed', bedSchema);
 module.exports = Bed;

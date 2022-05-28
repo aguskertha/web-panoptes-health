@@ -1,0 +1,188 @@
+
+<div class="container-fluid">
+    <div class="row" align="center">
+        
+        <div class="col-3">
+            <div class="p-2 px-10 text-dark bg-white shadow-sm bg-body rounded">
+                <div class=" text-black text-decoration-none my-3" >
+                    <img src="/public/images/hospital.png" alt="hugenerd" width="50" height="50" class="">
+                    <h4>Hospital</h4>
+                    <span class="d-none d-sm-inline mx-1 text-blue">RSUD Singaraja</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="p-2 px-10 text-dark bg-white shadow-sm bg-body rounded">
+                <div class=" text-black text-decoration-none my-3" >
+                    <img src="/public/images/patient.png" alt="hugenerd" width="50" height="50" class="">
+                    <h4>Patient</h4>
+                    <span class="d-none d-sm-inline mx-1 text-blue"><%= patients.length %></span>
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="p-2 px-10 text-dark bg-white shadow-sm bg-body rounded">
+                <div class=" text-black text-decoration-none my-3" >
+                    <img src="/public/images/device.png" alt="hugenerd" width="50" height="50" class="">
+                    <h4>Device</h4>
+                    <span class="d-none d-sm-inline mx-1 text-blue"><%= devices.length %></span>
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="p-2 px-10 text-dark bg-white shadow-sm bg-body rounded">
+                <div class=" text-black text-decoration-none my-3" >
+                    <img src="/public/images/room.png" alt="hugenerd" width="50" height="50" class="">
+                    <h4>Room</h4>
+                    <span class="d-none d-sm-inline mx-1 text-blue"><%= rooms.length %></span>
+                </div>
+            </div>
+        </div>
+        
+        
+    </div>
+</div> 
+<br>
+<div class="container-fluid bg-white shadow-sm bg-body rounded py-3"> 
+    <table class="table caption-top table-paginate-patient" cellspacing="0" width="100%">
+        <caption class="h3 mt-2">Patient List</caption>
+        <thead>
+            <tr>
+                <th scope="col">No</th>
+                <th scope="col">Name</th>
+                <th scope="col">NIK</th>
+                <th scope="col">Status</th>
+                <th scope="col">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% for( let index = 0; index < patients.length; index++ ) { %>
+                <% const patient = patients[index] %> 
+                <tr>
+                    <th scope="row"><%= index+1 %> </th>
+                    <td><%= patient.name %></td>
+                    <td><%= patient.NIK %></td>
+                    <td><%= patient.status ? 'Connected Bed' : 'Not Connected to Bed' %></td>
+                    <td>@mdo</td>
+                </tr>  
+            <% } %>
+          
+        </tbody>
+      </table>
+</div>
+<br>
+<div class="container-fluid bg-white shadow-sm bg-body rounded py-3"> 
+    <table class="table caption-top table-paginate-device" cellspacing="0" width="100%">
+        <caption class="h3 mt-2">Device List</caption>
+        <thead>
+            <tr>
+                <th scope="col">No</th>
+                <th scope="col">Name</th>
+                <th scope="col">IP</th>
+                <th scope="col">Status</th>
+                <th scope="col">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% for( let index = 0; index < devices.length; index++ ) { %>
+                <% const device = devices[index] %> 
+                <tr>
+                    <th scope="row"><%= index+1 %> </th>
+                    <td><%= device.name %></td>
+                    <td><%= device.deviceIP %></td>
+                    <td><%= device.status ? 'Connected Bed' : 'Not Connected to Bed' %></td>
+                    <td>@mdo</td>
+                </tr>  
+            <% } %>
+          
+        </tbody>
+      </table>
+</div>
+<br>
+<div class="container-fluid bg-white shadow-sm bg-body rounded py-3"> 
+    <table class="table caption-top table-paginate-room" cellspacing="0" width="100%">
+        <caption class="h3 mt-2">Room List</caption>
+        <thead>
+            <tr>
+                <th scope="col">No</th>
+                <th scope="col">Name</th>
+                <th scope="col">Beds</th>
+                <th scope="col">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% for( let index = 0; index < rooms.length; index++ ) { %>
+                <% const room = rooms[index].room %> 
+                <% const beds = rooms[index].beds %> 
+                <input type="hidden" name="" id="beds<%= index %>" value="<%= JSON.stringify(beds) %>">
+                <tr>
+                    <th scope="row"><%= index+1 %> </th>
+                    <td><%= room.name %></td>
+                    <td><%= beds.length %></td>
+                    <td>
+                        <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#modalBed" onclick="doSomething('<%= index %>')"><i class="bi bi-card-list"></i></button>
+                    </td>
+                </tr>  
+            <% } %>
+          
+        </tbody>
+      </table>
+</div>
+<div class="modal fade" id="modalBed" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">Bed List</h4>
+            </div>
+            
+            <!-- Modal Body -->
+            <table class="table caption-top" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <th scope="col">No</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Device</th>
+                        <th scope="col">Patient</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="bedData">
+                
+                </tbody>
+            </table>
+            
+            <!-- Modal Footer -->
+            <div class="modal-footer">
+               
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="https://unpkg.com/xlsx@0.15.1/dist/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    function doSomething(i){
+        var data = `#beds${i}`;
+        var bedsStr = $(data).val();
+        var beds =  JSON.parse(bedsStr);
+        var wrapperBedData = $("#bedData"); 
+        $(wrapperBedData).empty();
+        for( let i = 0; i < beds.length; i++ ) {
+            const bed = beds[i];
+            const device = (typeof bed.device == 'undefined'? 'Not Connected to Device' : bed.device.name)
+            const patient = (typeof bed.patient == 'undefined'? 'Not Connected to Patient' : bed.patient.name)
+            $(wrapperBedData).append(
+            `
+            <tr style="white-space: nowrap;">
+                <th scope="row">${i+1}</th>
+                <td>${bed.name}</td>
+                <td>${device}</td>
+                <td>${patient}</td>
+                <td>No Action</td>
+            </tr>
+            `
+            );
+        }
+    }
+</script>

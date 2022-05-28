@@ -106,8 +106,51 @@ const disconnectPatientToBed = async (req, res, next) => {
     }
 }
 
+const getPatients = async (req, res, next) => {
+    try {
+        const patients = await Patient.find()
+        res.json(patients)
+    } catch (error) {
+        res.status(400).json({message: error.toString()});
+    }
+}
+
+const getPatientsPagination = async (req, res, next) => {
+    try {
+        const page = req.query.page;
+        const options = {
+            page: page,
+            limit: 1,
+            collation: {
+              locale: 'en',
+            },
+          };
+        
+        const data = await Patient.paginate({}, options);
+        res.json(data)
+    } catch (error) {
+        res.status(400).json({message: error.toString()});
+    }
+}
+
+const getPatientByID = async (req, res, next) => {
+    try {
+        const patientID = req.params.patientID;
+        const patient = await Patient.findOne({_id: patientID})
+        if(!patient){
+            throw 'Patient not found!'
+        }
+        res.json(patient)
+    } catch (error) {
+        res.status(400).json({message: error.toString()});
+    }
+}
+
 module.exports = {
     createPatient,
     connectPatientToBed,
-    disconnectPatientToBed
+    disconnectPatientToBed,
+    getPatients,
+    getPatientByID,
+    getPatientsPagination
 }

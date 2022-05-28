@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const mongoosePaginate = require('mongoose-paginate-v2');
 const Schema = mongoose.Schema;
 const moment = require('moment');
 const deviceSchema = new Schema({
@@ -36,6 +37,6 @@ deviceSchema.pre('updateOne', function(next){
     this.update({},{ $set: { updatedAt: moment().format() } });
     next();
 });
-
+deviceSchema.plugin(mongoosePaginate);
 const Device = mongoose.model('Device', deviceSchema);
 module.exports = Device;

@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const mongoosePaginate = require('mongoose-paginate-v2');
 const Schema = mongoose.Schema;
 const moment = require('moment');
 const sensorSchema = new Schema({
@@ -46,6 +47,6 @@ sensorSchema.pre('updateOne', function(next){
     this.update({},{ $set: { updatedAt: moment().format() } });
     next();
 });
-
+sensorSchema.plugin(mongoosePaginate);
 const Sensor = mongoose.model('Sensor', sensorSchema);
 module.exports = Sensor;

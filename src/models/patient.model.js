@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const mongoosePaginate = require('mongoose-paginate-v2');
 const Schema = mongoose.Schema;
 const moment = require('moment');
 const patientSchema = new Schema({
@@ -50,6 +51,6 @@ patientSchema.pre('updateOne', function(next){
     this.update({},{ $set: { updatedAt: moment().format() } });
     next();
 });
-
+patientSchema.plugin(mongoosePaginate);
 const Patient = mongoose.model('Patient', patientSchema);
 module.exports = Patient;

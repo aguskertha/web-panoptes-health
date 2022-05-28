@@ -12,6 +12,16 @@ const createRoom = async (req, res, next) => {
     }
 }
 
+const getRooms = async (req, res, next) => {
+    try {
+        const rooms = await Room.find()
+        res.json(rooms)
+    } catch (error) {
+        res.status(400).json({message: error.toString()});
+    }
+}
+
 module.exports = {
-    createRoom
+    createRoom,
+    getRooms
 }

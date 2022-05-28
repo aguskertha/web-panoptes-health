@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const mongoosePaginate = require('mongoose-paginate-v2');
 const Schema = mongoose.Schema;
 const moment = require('moment');
 const roomShcema = new Schema({
@@ -25,6 +26,6 @@ roomShcema.pre('updateOne', function(next){
     this.update({},{ $set: { updatedAt: moment().format() } });
     next();
 });
-
+roomShcema.plugin(mongoosePaginate);
 const Room = mongoose.model('Room', roomShcema);
 module.exports = Room;

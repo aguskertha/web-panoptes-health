@@ -8,7 +8,6 @@ const { disconnect } = require('mongoose');
 const registerDevice = async (req, res, next) => {
     try {
         const {name, code, deviceIP} = req.body;
-        console.log(req. body)
         const device = await Device.findOne({code: code})
         if(device){
             res.json({message: 'Device already registered!'})
@@ -108,8 +107,32 @@ const disconnectDeviceToBed = async (req, res, next) => {
     }
 }
 
+const getDevices = async (req, res, next) => {
+    try {
+        const devices = await Device.find()
+        res.json(devices)
+    } catch (error) {
+        res.status(400).json({message: error.toString()});
+    }
+}
+
+const getDeviceByID = async (req, res, next) => {
+    try {
+        const deviceID = req.params.deviceID;
+        const device = await Device.findOne({_id: ObjectID(deviceID)})
+        if(!device){
+            throw 'Device not found!'
+        }
+        res.json(device)
+    } catch (error) {
+        res.status(400).json({message: error.toString()});
+    }
+}
+
 module.exports = {
     registerDevice,
     connectDeviceToBed,
-    disconnectDeviceToBed
+    disconnectDeviceToBed,
+    getDevices,
+    getDeviceByID
 }

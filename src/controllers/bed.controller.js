@@ -19,6 +19,17 @@ const createBed = async (req, res, next) => {
     }
 }
 
+const getBedsByRoom = async (req, res, next) => {
+    try {
+        const roomID = req.params.roomID;
+        const beds = await Bed.find({roomID})
+        res.json(beds)
+    } catch (error) {
+        res.status(400).json({message: error.toString()});
+    }
+}
+
 module.exports = {
-    createBed
+    createBed,
+    getBedsByRoom
 }
