@@ -6,7 +6,10 @@ var logger = require('morgan');
 var cors = require('cors');
 var app = express();
 const expressLayouts = require('express-ejs-layouts');
+const schedule = require('node-schedule')
+const axiosLib = require('axios')
 require('dotenv').config();
+const axios = axiosLib.create({baseURL: process.env.APP_HOST});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -18,6 +21,16 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use('/public',express.static(path.join(__dirname, 'public')));
+
+schedule.scheduleJob('*/1 * * * *', async () => {
+  try {
+    await axios.delete('/sensors');
+    console.log('Deleted sensors')
+  } catch (error) {
+    console.log(error.toString())
+  }
+
+})
 
 const router =  require('./src/routes/routes');
 app.use('/', router);

@@ -54,6 +54,20 @@ const getSensorsByBed = async (req, res ,next) => {
     }
 }
 
+const getSensorMonitorByBed = async (req, res, next) => {
+    try {
+        const bedID = req.params.bedID;
+        const bed = await Bed.findOne({_id: ObjectID(bedID)})
+        if(!bed){
+            throw 'Bed not found!'
+        }
+        const sensors = await Sensor.find({bedID}).sort({createdAt: -1})
+        const sensor = sensors[0]
+        res.json(sensor.heartRate)
+    } catch (error) {
+        res.status(400).json({message: error.toString()})
+    }
+}
 
 const deleteSensors = async (req, res, next) => {
     try {
@@ -87,9 +101,19 @@ const getSensors = async (req, res, next) => {
     }
 }
 
+const getDummyData = async (req, res, next) => {
+    try {
+        res.json(Math.random())
+    } catch (error) {
+        
+    }
+}
+
 module.exports = {
     createSensorData,
     deleteSensors,
     getSensors,
-    getSensorsByBed
+    getSensorsByBed,
+    getDummyData,
+    getSensorMonitorByBed,
 }

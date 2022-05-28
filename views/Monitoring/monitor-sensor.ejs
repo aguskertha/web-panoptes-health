@@ -1,0 +1,39 @@
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<div class="container-fluid">
+
+    <div class="navbar"><span>Real-TIme Plot</span></div>
+    <div class="wrapper">
+        <div id="chart">
+            <script>
+                async function fetchData() {
+                    const response = await fetch('/sensors/bed/monitor/6290f70f931fe0a1cb181afe');
+                    const data = await response.json();
+                    return data;
+                }
+                fetchData().then(data => {
+                    // console.log(data)
+                    Plotly.plot('chart', [{
+                        y:[data],
+                        type: 'line'
+                    }])
+                });
+                
+                var cnt = 0;
+                setInterval(function(){
+                    fetchData().then(data => {
+                        Plotly.extendTraces('chart', {y: [[data]]}, [0])
+                        cnt++;
+                        if(cnt > 50){
+                            Plotly.relayout('chart', {
+                                xaxis: {
+                                    range: [cnt-50, cnt]
+                                }
+                            })
+                        }
+                    });
+                }, 1000);
+            </script>
+        </div>
+    </div>
+</div>
