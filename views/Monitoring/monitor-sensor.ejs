@@ -1,50 +1,163 @@
 <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 <script type="text/javascript" src="https://unpkg.com/xlsx@0.15.1/dist/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<div class="container-fluid">
+<div class="container">
     <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="/monitoring/rooms">Rooms</a></li>
             <li class="breadcrumb-item"><a href="/monitoring/rooms/<%= room._id %>"><%= room.name %></a></li>
-            <li class="breadcrumb-item active" aria-current="page"><%= bed.name %></li>
+            <li class="breadcrumb-item active" aria-current="page"><%= bed.bed.name %></li>
         </ol>
     </nav>
-    <input type="hidden" name="" id="bedID" value="<%= bedID %>">
-    <div class="navbar"><span>Real-TIme Plot</span></div>
-    <div class="wrapper">
-        <div id="chart">
-            <script>
-                var bedID = $('#bedID').val();
-                console.log(bedID)
-                // var unitConversion = JSON.parse(unitConversionStr);
-                async function fetchData(bedID) {
-                    const response = await fetch('/sensors/bed/monitor/'+bedID);
-                    const data = await response.json();
-                    return data;
-                }
-                fetchData(bedID).then(data => {
-                    // console.log(data)
-                    Plotly.plot('chart', [{
-                        y:[data],
-                        type: 'line'
-                    }])
-                });
+</div>
+<br>
+<% 
+    let colorDevice = 'danger'
+    if(bed.bed.deviceID !== ''){
+        colorDevice = 'success'
+    }
+    let colorPatient = 'danger'
+    if(bed.bed.patientID !== ''){
+        colorPatient = 'success'
+    }
+%> 
+<div class="container-fluid">
+    <div class="row" align="center">
+        <div class="col-6">
+            <div class="p-2 px-10 text-dark bg-white shadow-sm bg-body rounded border border-<%= colorPatient %> border-4">
+                <% if (bed.bed.patientID !== '') { %>
+                    <a class="btn btn-danger btn-sm float-sm-end" role="button" id="patientExit"><i class="bi bi-person-x-fill"></i> Exit</button></a><br>
+                <% } else {%>
+                    <a class="btn btn-primary btn-sm float-sm-end" role="button" href=""><i class="bi bi-person-plus-fill"></i> Entry</button></a><br>
+                <% } %> 
+                <div class=" text-black text-decoration-none my-3 " >
+                    <img src="/public/images/patient.png" alt="hugenerd" width="20%" class="">
+                    <h4><%= bed.patient.name %></h4>
+                    <span class="d-none d-sm-inline mx-1 text-blue"><%= bed.patient.status ? 'Connected Bed' : 'Not Connected to Bed' %></span>
+                </div>
                 
-                var cnt = 0;
-                setInterval(function(){
-                    fetchData(bedID).then(data => {
-                        Plotly.extendTraces('chart', {y: [[data]]}, [0])
-                        cnt++;
-                        if(cnt > 50){
-                            Plotly.relayout('chart', {
-                                xaxis: {
-                                    range: [cnt-50, cnt]
-                                }
-                            })
-                        }
-                    });
-                }, 1000);
-            </script>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="p-2 px-10 text-dark bg-white shadow-sm bg-body rounded border border-<%= colorDevice %> border-4">
+                <% if (bed.bed.deviceID !== '') { %>
+                    <a class="btn btn-danger btn-sm float-sm-end" role="button" id="deviceDisconnect"><i class="bi bi-wifi-off"></i> Disconnect</button></a><br>
+                <% } else {%>
+                    <a class="btn btn-primary btn-sm float-sm-end" role="button" href=""><i class="bi bi-wifi"></i> Connect</button></a><br>
+                <% } %> 
+                <div class=" text-black text-decoration-none my-3" >
+                    <img src="/public/images/device.png" alt="hugenerd" width="20%" class="">
+                    <h4><%= bed.device.name %></h4>
+                    <span class="d-none d-sm-inline mx-1 text-blue"><%= bed.device.status ? 'Connected Bed' : 'Not Connected to Bed' %></span>
+                </div>
+            </div>
         </div>
     </div>
 </div>
+<br>
+<input type="hidden" name="" id="bedID" value="<%= bedID %>">
+<input type="hidden" name="" id="roomID" value="<%= room._id %>">
+<% if (bed.bed.deviceID !== '' && bed.bed.patientID !== '') { %>
+ 
+    <div class="container-fluid">
+        
+        <div class="wrapper">
+            <div id="chart">
+                <script>
+                    var bedID = $('#bedID').val();
+                    async function fetchData(bedID) {
+                        const response = await fetch('/sensors/bed/monitor/'+bedID);
+                        const data = await response.json();
+                        const newData = {
+                            data,
+                            status: response.status
+                        }
+                        return newData;
+                    }
+                    fetchData(bedID).then(data => {
+                        Plotly.plot('chart', [{
+                            y: [data.data.heartRate],
+                            name: 'Heart Rate',
+                            mode: 'scatter',
+                            line: { color: '#194afc' }
+                        }, {
+                            y: [data.data.oxiRate],
+                            name: 'Oxi Rate',
+                            mode: 'scatter',
+                            line: { color: '#e66115' }
+                        }], {
+                            title: 'Graph Monitoring Heart & Oxi Patient',
+                        });
+                    });
+                    
+                    var cnt = 0;
+                    setInterval(function(){
+                        fetchData(bedID).then(data => {
+                            if(data.status == 200){
+
+                                Plotly.extendTraces(
+                                    'chart', 
+                                    {y: [[data.data.heartRate], [data.data.oxiRate]]},
+                                    [0, 1])
+                                cnt++;
+                                if(cnt > 50){
+                                    Plotly.relayout('chart', {
+                                        xaxis: {
+                                            range: [cnt-50, cnt]
+                                        }
+                                    })
+                                }
+                            }
+                        });
+                    }, 200);
+                </script>
+            </div>
+        </div>
+        
+    </div>
+<% } %>
+<script type="text/javascript" src="https://unpkg.com/xlsx@0.15.1/dist/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    async function disconnect(path, bedID) {
+        const response = await fetch(path, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({bedID: bedID})
+        });
+        const data = await response.json();
+        const newData = {
+            data,
+            status: response.status
+        }
+        return newData;
+    }
+    $(function(){
+        var bedID = $('#bedID').val();
+        var roomID = $('#roomID').val();
+        $('#patientExit').on('click', function(){
+            var result = confirm('Are you sure to exit this Patient?');
+            if(result){
+                disconnect('/patients/disconnect', bedID).then(data => {
+                    if(data.status == 200){
+                        window.location = `/monitoring/rooms/${roomID}/beds/${bedID}`;
+                    }
+                })
+            }
+        })
+        $('#deviceDisconnect').on('click', function(){
+            var result = confirm('Are you sure to disconnect this Device?');
+            if(result){
+                console.log(bedID)
+                disconnect('/devices/disconnect', bedID).then(data => {
+                    if(data.status == 200){
+                        window.location = `/monitoring/rooms/${roomID}/beds/${bedID}`;
+                    }
+                })
+            }
+        })
+    })
+</script>

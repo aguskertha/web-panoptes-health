@@ -63,7 +63,11 @@ const getSensorMonitorByBed = async (req, res, next) => {
         }
         const sensors = await Sensor.find({bedID}).sort({createdAt: -1})
         const sensor = sensors[0]
-        res.json(sensor.heartRate)
+        const data = {
+            heartRate: sensor.heartRate,
+            oxiRate: sensor.oxiRate
+        }
+        res.json(data)
     } catch (error) {
         res.status(400).json({message: error.toString()})
     }

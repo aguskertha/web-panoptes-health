@@ -22,7 +22,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use('/public',express.static(path.join(__dirname, 'public')));
 
-schedule.scheduleJob('*/1 * * * *', async () => {
+schedule.scheduleJob('*/10 * * * *', async () => {
   try {
     await axios.delete('/sensors');
     console.log('Deleted sensors')

@@ -92,9 +92,6 @@ const renderMonitorSensor = async (req, res, next) => {
         const bed = await axios.get('/beds/'+bedID)
         const room = await axios.get('/rooms/'+roomID)
         
-        // const beds = await axios.get('/beds/'+roomID)
-        // const column = 3;
-        // const row = Math.ceil((beds.data.length/column))
         res.render('Monitoring/monitor-sensor', {
             layout: 'layouts/main-layout',
             bedID,
@@ -110,5 +107,5 @@ module.exports = {
     renderMonitoringPage,
     renderGridRooms,
     renderGridBeds,
-    renderMonitorSensor
+    renderMonitorSensor,
 }

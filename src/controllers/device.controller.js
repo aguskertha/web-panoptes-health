@@ -69,6 +69,7 @@ const disconnectDeviceToBed = async (req, res, next) => {
     try {
         const bedID = req.body.bedID;
         const bed = await Bed.findOne({_id: ObjectID(bedID)})
+        console.log(bedID)
         if(!bed){
             throw 'Bed not found!'
         }
@@ -103,6 +104,7 @@ const disconnectDeviceToBed = async (req, res, next) => {
         }
         res.json({message: `Device ${device.name} disconected from Bed ${bed.name}`})
     } catch (error) {
+        console.log(error.toString())
         res.status(400).json({message: error.toString()});
     }
 }
