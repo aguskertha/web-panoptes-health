@@ -1,4 +1,5 @@
 <div class="container-fluid">
+    <a class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#modalCreateRoom" role="button"><i class="bi bi-plus-square"></i> Room</a>
     <% let index = 0; %> 
     <% for( let i = 0; i < row; i++ ) { %>
         <div class="row" align="center">
@@ -21,3 +22,61 @@
         </div>
     <% } %>
 </div>
+<!-- Modal -->
+<div class="modal fade" id="modalCreateRoom" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">New Room</h4>
+            </div>
+            
+            <!-- Modal Body -->
+            <div class="modal-body">
+                <p class="statusMsg"></p>
+                <form role="form">
+                    <div class="form-group">
+                        <label for="inputName">Name</label>
+                        <input type="text" class="form-control" id="roomName" name="roomName" placeholder="Enter room name" required>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- Modal Footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary submitBtn" onclick="createRoom()">Create</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    async function create(roomName) {
+        const response = await fetch('/rooms', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({name: roomName})
+        });
+        const data = await response.json();
+        const newData = {
+            data,
+            status: response.status
+        }
+        return newData;
+    }
+    function createRoom(){
+        var roomName = $('#roomName').val()
+        var result = confirm('Are you sure to create new Room?');
+        if(result){
+            create(roomName).then(data => {
+                if(data.status == 200){
+                    window.location = `/monitoring/rooms`;
+                }
+            })
+        }
+    }
+</script>

@@ -1,0 +1,79 @@
+
+<div class="container-fluid">
+    <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/monitoring/rooms">Rooms</a></li>
+            <li class="breadcrumb-item"><a href="/monitoring/rooms/<%= roomID %>"><%= room.name %></a></li>
+            <li class="breadcrumb-item"><a href="/monitoring/rooms/<%= roomID %>/beds/<%= bedID %>"><%= bed.bed.name %></a></li>
+            <li class="breadcrumb-item active" aria-current="page">Entry Patient</li>
+        </ol>
+    </nav>
+    <div class="container-fluid bg-white shadow-sm bg-body rounded py-3">
+        <input type="hidden" name="" id="bedID" value="<%= bedID %>">
+        <input type="hidden" name="" id="roomID" value="<%= roomID%>">
+        <table class="table caption-top table-paginate-patient flex" cellspacing="0" width="100%">
+            <caption class="h3 mt-2">Patient List</caption>
+            <thead>
+                <tr>
+                    <th scope="col">No</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">NIK</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% for( let index = 0; index < patients.length; index++ ) { %>
+                    <% const patient = patients[index] %> 
+                    <tr>
+                        <input type="hidden" id="patientID<%= index %>" value="<%= patient._id %>">
+                        <th scope="row"><%= index+1 %> </th>
+                        <td><%= patient.name %></td>
+                        <td><%= patient.NIK %></td>
+                        <td><%= patient.status ? 'Connected Bed' : 'Not Connected to Bed' %></td>
+                        <td><a class="btn btn-primary btn-sm" role="button" id="patientConnect<%= index %>" onclick="patientConnect('<%= index %>')"><i class="bi bi-person-plus-fill"></i> Entry</button></a></td>
+                    </tr>  
+                <% } %>
+              
+            </tbody>
+          </table>
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.table-paginate-patient').DataTable();
+    });
+    async function connect(patientID, bedID) {
+        const response = await fetch('/patients/connect', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({bedID: bedID, patientID: patientID})
+        });
+        const data = await response.json();
+        const newData = {
+            data,
+            status: response.status
+        }
+        return newData;
+    }
+    var roomID = $('#roomID').val()
+    var bedID = $('#bedID').val()
+    function patientConnect(i){
+        var patientID = $('#patientID'+i).val()
+        var result = confirm('Are you sure to entry this Patient?');
+        if(result){
+            connect(patientID, bedID).then(data => {
+                if(data.status == 200){
+                    window.location = `/monitoring/rooms/${roomID}/beds/${bedID}`;
+                }
+            })
+        }
+    }
+
+</script>

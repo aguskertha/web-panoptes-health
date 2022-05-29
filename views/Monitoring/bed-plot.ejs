@@ -5,6 +5,8 @@
             <li class="breadcrumb-item active" aria-current="page"><%= room.name %></li>
         </ol>
     </nav>
+    <input type="hidden" name="" id="roomID" value="<%= room._id %>">
+    <a class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#modalCreateBed" role="button"><i class="bi bi-plus-square"></i> Bed</a>
     <% let index = 0; %> 
     <% for( let i = 0; i < row; i++ ) { %>
         <div class="row" align="center">
@@ -35,3 +37,63 @@
         </div>
     <% } %>
 </div>
+<!-- Modal -->
+<div class="modal fade" id="modalCreateBed" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">New Bed</h4>
+            </div>
+            
+            <!-- Modal Body -->
+            <div class="modal-body">
+                <p class="statusMsg"></p>
+                <form role="form">
+                    <div class="form-group">
+                        <label for="inputName">Name</label>
+                        <input type="text" class="form-control" id="bedName" name="bedName" placeholder="Enter bed name" required>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- Modal Footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary submitBtn" onclick="createBed()">Create</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    var roomID = $('#roomID').val()
+    async function create(bedName, roomID) {
+        const response = await fetch('/beds', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({name: bedName, roomID: roomID})
+        });
+        const data = await response.json();
+        const newData = {
+            data,
+            status: response.status
+        }
+        return newData;
+    }
+    function createBed(){
+        var bedName = $('#bedName').val()
+        var result = confirm('Are you sure to create new Bed?');
+        if(result){
+            create(bedName, roomID).then(data => {
+                console.log(data)
+                if(data.status == 200){
+                    window.location = `/monitoring/rooms/${roomID}`;
+                }
+            })
+        }
+    }
+</script>

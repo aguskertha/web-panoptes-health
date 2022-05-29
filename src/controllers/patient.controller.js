@@ -115,6 +115,15 @@ const getPatients = async (req, res, next) => {
     }
 }
 
+const getAvailablePatients = async (req, res, next) => {
+    try {
+        const patients = await Patient.find({status: false})
+        res.json(patients)
+    } catch (error) {
+        res.status(400).json({message: error.toString()});
+    }
+}
+
 const getPatientsPagination = async (req, res, next) => {
     try {
         const page = req.query.page;
@@ -152,5 +161,6 @@ module.exports = {
     disconnectPatientToBed,
     getPatients,
     getPatientByID,
-    getPatientsPagination
+    getPatientsPagination,
+    getAvailablePatients
 }

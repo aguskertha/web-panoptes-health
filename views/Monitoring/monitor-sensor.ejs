@@ -28,7 +28,7 @@
                 <% if (bed.bed.patientID !== '') { %>
                     <a class="btn btn-danger btn-sm float-sm-end" role="button" id="patientExit"><i class="bi bi-person-x-fill"></i> Exit</button></a><br>
                 <% } else {%>
-                    <a class="btn btn-primary btn-sm float-sm-end" role="button" href=""><i class="bi bi-person-plus-fill"></i> Entry</button></a><br>
+                    <a class="btn btn-primary btn-sm float-sm-end" role="button" href="/monitoring/rooms/<%= room._id %>/beds/<%= bedID %>/patient"><i class="bi bi-person-plus-fill"></i> Entry</button></a><br>
                 <% } %> 
                 <div class=" text-black text-decoration-none my-3 " >
                     <img src="/public/images/patient.png" alt="hugenerd" width="20%" class="">
@@ -43,7 +43,7 @@
                 <% if (bed.bed.deviceID !== '') { %>
                     <a class="btn btn-danger btn-sm float-sm-end" role="button" id="deviceDisconnect"><i class="bi bi-wifi-off"></i> Disconnect</button></a><br>
                 <% } else {%>
-                    <a class="btn btn-primary btn-sm float-sm-end" role="button" href=""><i class="bi bi-wifi"></i> Connect</button></a><br>
+                    <a class="btn btn-primary btn-sm float-sm-end" role="button" href="/monitoring/rooms/<%= room._id %>/beds/<%= bedID %>/device"><i class="bi bi-wifi"></i> Connect</button></a><br>
                 <% } %> 
                 <div class=" text-black text-decoration-none my-3" >
                     <img src="/public/images/device.png" alt="hugenerd" width="20%" class="">

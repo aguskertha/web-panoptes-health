@@ -131,10 +131,20 @@ const getDeviceByID = async (req, res, next) => {
     }
 }
 
+const getAvailableDevices = async (req, res, next) => {
+    try {
+        const devices = await Device.find({status: false})
+        res.json(devices)
+    } catch (error) {
+        res.status(400).json({message: error.toString()});
+    }
+}
+
 module.exports = {
     registerDevice,
     connectDeviceToBed,
     disconnectDeviceToBed,
     getDevices,
-    getDeviceByID
+    getDeviceByID,
+    getAvailableDevices
 }

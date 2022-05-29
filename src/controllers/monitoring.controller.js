@@ -103,9 +103,53 @@ const renderMonitorSensor = async (req, res, next) => {
     }
 }
 
+const renderConnectPatient = async (req, res, next) => {
+    try {
+        const bedID = req.params.bedID
+        const roomID = req.params.roomID
+        const patients = await axios.get('/patients/available')
+        const room = await axios.get('/rooms/'+roomID)
+        const bed = await axios.get('/beds/'+bedID)
+
+        res.render('Monitoring/connect-patient', {
+            layout: 'layouts/main-layout',
+            bedID,
+            roomID,
+            patients: patients.data,
+            room: room.data,
+            bed: bed.data,
+        })
+    } catch (error) {
+        
+    }
+}
+
+const renderConnectDevice = async (req, res, next) => {
+    try {
+        const bedID = req.params.bedID
+        const roomID = req.params.roomID
+        const room = await axios.get('/rooms/'+roomID)
+        const bed = await axios.get('/beds/'+bedID)
+        const devices = await axios.get('/devices/available')
+        
+        res.render('Monitoring/connect-device', {
+            layout: 'layouts/main-layout',
+            bedID,
+            roomID,
+            devices: devices.data,
+            room: room.data,
+            bed: bed.data,
+        })
+    } catch (error) {
+        
+    }
+}
+
 module.exports = {
     renderMonitoringPage,
     renderGridRooms,
     renderGridBeds,
     renderMonitorSensor,
+    renderConnectPatient,
+    renderConnectDevice
 }
