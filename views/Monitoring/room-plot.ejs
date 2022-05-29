@@ -1,0 +1,23 @@
+<div class="container-fluid">
+    <% let index = 0; %> 
+    <% for( let i = 0; i < row; i++ ) { %>
+        <div class="row" align="center">
+            <% for( let j = 0; j < column; j++ ) { %>
+                <% if (typeof rooms[index] !== 'undefined') { %>
+                    <div class="col-4 mb-3">
+                        <a href="/monitoring/rooms/<%= rooms[index].room._id %>">
+                        <div class="p-2 px-10 text-dark bg-white shadow-sm bg-body rounded">
+                            <div class=" text-black text-decoration-none my-3" >
+                                <img src="/public/images/room.png" alt="hugenerd" width="20%" class="">
+                                <h4><%= (rooms[index].room.name) %> Room</h4>
+                                <span class="d-none d-sm-inline mx-1 text-blue"><%= (rooms[index].beds.length) %> Beds</span>
+                            </div>
+                        </div>
+                        </a>
+                    </div>
+                <% } %>
+                <% index++; %> 
+            <% } %>
+        </div>
+    <% } %>
+</div>

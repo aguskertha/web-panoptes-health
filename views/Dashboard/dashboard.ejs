@@ -5,16 +5,16 @@
         <div class="col-3">
             <div class="p-2 px-10 text-dark bg-white shadow-sm bg-body rounded">
                 <div class=" text-black text-decoration-none my-3" >
-                    <img src="/public/images/hospital.png" alt="hugenerd" width="50" height="50" class="">
+                    <img src="/public/images/hospital.png" alt="hugenerd" width="20%"class="">
                     <h4>Hospital</h4>
-                    <span class="d-none d-sm-inline mx-1 text-blue">RSUD Singaraja</span>
+                    <span class="d-none d-sm-inline mx-1 text-blue h4">RSUD Singaraja</span>
                 </div>
             </div>
         </div>
         <div class="col-3">
             <div class="p-2 px-10 text-dark bg-white shadow-sm bg-body rounded">
                 <div class=" text-black text-decoration-none my-3" >
-                    <img src="/public/images/patient.png" alt="hugenerd" width="50" height="50" class="">
+                    <img src="/public/images/patient.png" alt="hugenerd" width="20%" class="">
                     <h4>Patient</h4>
                     <span class="d-none d-sm-inline mx-1 text-blue"><%= patients.length %></span>
                 </div>
@@ -23,7 +23,7 @@
         <div class="col-3">
             <div class="p-2 px-10 text-dark bg-white shadow-sm bg-body rounded">
                 <div class=" text-black text-decoration-none my-3" >
-                    <img src="/public/images/device.png" alt="hugenerd" width="50" height="50" class="">
+                    <img src="/public/images/device.png" alt="hugenerd" width="20%" class="">
                     <h4>Device</h4>
                     <span class="d-none d-sm-inline mx-1 text-blue"><%= devices.length %></span>
                 </div>
@@ -32,7 +32,7 @@
         <div class="col-3">
             <div class="p-2 px-10 text-dark bg-white shadow-sm bg-body rounded">
                 <div class=" text-black text-decoration-none my-3" >
-                    <img src="/public/images/room.png" alt="hugenerd" width="50" height="50" class="">
+                    <img src="/public/images/room.png" alt="hugenerd" width="20%" class="">
                     <h4>Room</h4>
                     <span class="d-none d-sm-inline mx-1 text-blue"><%= rooms.length %></span>
                 </div>
@@ -43,8 +43,8 @@
     </div>
 </div> 
 <br>
-<div class="container-fluid bg-white shadow-sm bg-body rounded py-3"> 
-    <table class="table caption-top table-paginate-patient" cellspacing="0" width="100%">
+<div class="container-fluid bg-white shadow-sm bg-body rounded py-3 m-3">
+    <table class="table caption-top table-paginate-patient flex" cellspacing="0" width="100%">
         <caption class="h3 mt-2">Patient List</caption>
         <thead>
             <tr>
@@ -71,7 +71,7 @@
       </table>
 </div>
 <br>
-<div class="container-fluid bg-white shadow-sm bg-body rounded py-3"> 
+<div class="container-fluid bg-white shadow-sm bg-body rounded py-3 m-3"> 
     <table class="table caption-top table-paginate-device" cellspacing="0" width="100%">
         <caption class="h3 mt-2">Device List</caption>
         <thead>
@@ -99,7 +99,7 @@
       </table>
 </div>
 <br>
-<div class="container-fluid bg-white shadow-sm bg-body rounded py-3"> 
+<div class="container-fluid bg-white shadow-sm bg-body rounded py-3 m-3"> 
     <table class="table caption-top table-paginate-room" cellspacing="0" width="100%">
         <caption class="h3 mt-2">Room List</caption>
         <thead>

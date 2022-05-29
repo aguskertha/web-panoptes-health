@@ -1,4 +1,5 @@
 const Room = require('./../models/room.model')
+const ObjectID = require('mongodb').ObjectId;
 
 const createRoom = async (req, res, next) => {
     try {
@@ -21,7 +22,21 @@ const getRooms = async (req, res, next) => {
     }
 }
 
+const getRoomByID = async (req, res, next) => {
+    try {
+        const roomID = req.params.roomID;
+        const room = await Room.findOne({_id: ObjectID(roomID)})
+        if(!room){
+            throw 'Room not found!'
+        }
+        res.json(room)
+    } catch (error) {
+        res.status(400).json({message: error.toString()});
+    }
+}
+
 module.exports = {
     createRoom,
-    getRooms
+    getRooms,
+    getRoomByID
 }

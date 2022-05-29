@@ -29,7 +29,21 @@ const getBedsByRoom = async (req, res, next) => {
     }
 }
 
+const getBedByID = async (req, res, next) => {
+    try {
+        const bedID = req.params.bedID
+        const bed = await Bed.findOne({_id: ObjectID(bedID)})
+        if(!bed){
+            throw 'Bed not Found!'
+        }
+        res.json(bed)
+    } catch (error) {
+        res.status(400).json({message: error.toString()});
+    }
+}
+
 module.exports = {
     createBed,
-    getBedsByRoom
+    getBedsByRoom,
+    getBedByID
 }

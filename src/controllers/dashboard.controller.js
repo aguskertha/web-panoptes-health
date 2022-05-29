@@ -26,7 +26,7 @@ const renderDashboardPage = async (req, res, next) => {
 
         const getBedsByRoom = async (roomData) => {
             const room = await JSON.parse(JSON.stringify(roomData));
-            const bedsFilter = await axios.get('/beds/'+room._id);
+            const bedsFilter = await axios.get('/beds/room/'+room._id);
             let promises = []
             bedsFilter.data.forEach(async (bedData) => {
                 promises.push(getData(bedData))

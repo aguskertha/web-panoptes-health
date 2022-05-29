@@ -1,17 +1,28 @@
 <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script type="text/javascript" src="https://unpkg.com/xlsx@0.15.1/dist/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <div class="container-fluid">
-
+    <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/monitoring/rooms">Rooms</a></li>
+            <li class="breadcrumb-item"><a href="/monitoring/rooms/<%= room._id %>"><%= room.name %></a></li>
+            <li class="breadcrumb-item active" aria-current="page"><%= bed.name %></li>
+        </ol>
+    </nav>
+    <input type="hidden" name="" id="bedID" value="<%= bedID %>">
     <div class="navbar"><span>Real-TIme Plot</span></div>
     <div class="wrapper">
         <div id="chart">
             <script>
-                async function fetchData() {
-                    const response = await fetch('/sensors/bed/monitor/6290f70f931fe0a1cb181afe');
+                var bedID = $('#bedID').val();
+                console.log(bedID)
+                // var unitConversion = JSON.parse(unitConversionStr);
+                async function fetchData(bedID) {
+                    const response = await fetch('/sensors/bed/monitor/'+bedID);
                     const data = await response.json();
                     return data;
                 }
-                fetchData().then(data => {
+                fetchData(bedID).then(data => {
                     // console.log(data)
                     Plotly.plot('chart', [{
                         y:[data],
@@ -21,7 +32,7 @@
                 
                 var cnt = 0;
                 setInterval(function(){
-                    fetchData().then(data => {
+                    fetchData(bedID).then(data => {
                         Plotly.extendTraces('chart', {y: [[data]]}, [0])
                         cnt++;
                         if(cnt > 50){
