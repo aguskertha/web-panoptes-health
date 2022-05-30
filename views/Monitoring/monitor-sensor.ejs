@@ -4,8 +4,8 @@
 <div class="container">
     <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="/monitoring/rooms">Rooms</a></li>
-            <li class="breadcrumb-item"><a href="/monitoring/rooms/<%= room._id %>"><%= room.name %></a></li>
+            <li class="breadcrumb-item"><a class="text-decoration-none" href="/monitoring/rooms">Rooms</a></li>
+            <li class="breadcrumb-item"><a class="text-decoration-none" href="/monitoring/rooms/<%= room._id %>"><%= room.name %></a></li>
             <li class="breadcrumb-item active" aria-current="page"><%= bed.bed.name %></li>
         </ol>
     </nav>

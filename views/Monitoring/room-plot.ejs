@@ -6,7 +6,7 @@
             <% for( let j = 0; j < column; j++ ) { %>
                 <% if (typeof rooms[index] !== 'undefined') { %>
                     <div class="col-4 mb-3">
-                        <a href="/monitoring/rooms/<%= rooms[index].room._id %>">
+                        <a class="text-decoration-none" href="/monitoring/rooms/<%= rooms[index].room._id %>">
                         <div class="p-2 px-10 text-dark bg-white shadow-sm bg-body rounded">
                             <div class=" text-black text-decoration-none my-3" >
                                 <img src="/public/images/room.png" alt="hugenerd" width="20%" class="">

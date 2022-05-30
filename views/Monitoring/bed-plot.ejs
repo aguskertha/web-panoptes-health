@@ -1,7 +1,7 @@
 <div class="container-fluid">
     <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="/monitoring/rooms">Rooms</a></li>
+            <li class="breadcrumb-item"><a class="text-decoration-none" href="/monitoring/rooms">Rooms</a></li>
             <li class="breadcrumb-item active" aria-current="page"><%= room.name %></li>
         </ol>
     </nav>
@@ -21,7 +21,7 @@
                                 // link = `/monitoring/rooms/${beds[index].roomID}`
                             %> 
                         <% } %> 
-                        <a href="<%= link %>">
+                        <a class="text-decoration-none" href="<%= link %>">
                         <div class="p-2 px-10 text-dark bg-white shadow-sm bg-body rounded border border-<%= color %> border-4">
                             <div class=" text-black text-decoration-none my-3" >
                                 <img src="/public/images/bed.png" alt="hugenerd" width="20%" class="">
