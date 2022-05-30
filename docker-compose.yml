@@ -12,6 +12,7 @@ services:
       - "5001:5001"
     environment:
       - PORT=5001
+      - APP_HOST=http://localhost:5001
       - DB_SERVICE=panoptes-mongo
       - DB_PORT=27017
       - DB_NAME=panoptesDB
