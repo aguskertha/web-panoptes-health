@@ -69,8 +69,50 @@ const getBedByID = async (req, res, next) => {
     }
 }
 
+const getBedsConnected = async (req, res, next) => {
+    try {
+        const beds = await Bed.find({deviceID: {$ne: ''}, patientID: {$ne: ''}})
+        let newDatas = []
+        for (let index = 0; index < beds.length; index++) {
+            const bed = beds[index];
+            const device = await Device.findOne({_id: ObjectID(bed.deviceID)})
+            const patient = await Patient.findOne({_id: ObjectID(bed.patientID)})
+            const room = await Room.findOne({_id: ObjectID(bed.roomID)})
+            const newData = {
+                bed,
+                device,
+                patient,
+                room
+            }
+            newDatas.push(newData)
+        }
+        res.json(newDatas)
+    } catch (error) {
+        res.status(400).json({message: error.toString()});
+    }
+}
+
+const deleteBedByID = async (req, res, next) => {
+    try {
+        const bedID = req.params.bedID
+        const bed = await Bed.findOne({_id: bedID})
+        if(!bed){
+            throw 'Bed not found!'
+        }
+        if(bed.patientID !== '' || bed.deviceID !== ''){
+            throw 'Bed cant deleted!'
+        }
+        await Bed.deleteOne({_id: bedID})
+        res.json({message: 'Bed deleted successfully'})
+    } catch (error) {
+        res.status(400).json({message: error.toString()});
+    }
+}
+
 module.exports = {
     createBed,
     getBedsByRoom,
-    getBedByID
+    getBedByID,
+    getBedsConnected,
+    deleteBedByID
 }

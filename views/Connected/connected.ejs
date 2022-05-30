@@ -1,0 +1,37 @@
+<div class="container-fluid bg-white shadow-sm bg-body rounded py-3 m-3"> 
+    <table class="table caption-top table-paginate-device" cellspacing="0" width="100%">
+        <caption class="h3 mt-2">Patient Connected</caption>
+        <thead>
+            <tr>
+                <th scope="col">No</th>
+                <th scope="col">Patient</th>
+                <th scope="col">Device</th>
+                <th scope="col">Room</th>
+                <th scope="col">Bed</th>
+                <th scope="col">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% for( let index = 0; index < beds.length; index++ ) { %>
+                <% const bed = beds[index] %> 
+                <tr>
+                    <th scope="row"><%= index+1 %> </th>
+                    <td><%= bed.patient.name %></td>
+                    <td><%= bed.device.name %></td>
+                    <td><%= bed.room.name %></td>
+                    <td><%= bed.bed.name %></td>
+                    <td><a class="btn btn-info btn-sm" role="button" href="/monitoring/rooms/<%= bed.room._id %>/beds/<%= bed.bed._id %>"><i class="bi bi-bar-chart"></i></button></a></td>
+                </tr>  
+            <% } %>
+          
+        </tbody>
+      </table>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.table-paginate-device').DataTable();
+    });
+</script>

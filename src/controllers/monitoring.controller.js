@@ -71,7 +71,6 @@ const renderGridBeds = async (req, res, next) => {
         const roomID = req.params.roomID
         const beds = await axios.get('/beds/room/'+roomID)
         const room = await axios.get('/rooms/'+roomID)
-        console.log(room)
         const column = 3;
         const row = Math.ceil((beds.data.length/column))
         res.render('Monitoring/bed-plot', {

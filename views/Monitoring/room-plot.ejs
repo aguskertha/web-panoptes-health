@@ -6,15 +6,16 @@
             <% for( let j = 0; j < column; j++ ) { %>
                 <% if (typeof rooms[index] !== 'undefined') { %>
                     <div class="col-4 mb-3">
-                        <a class="text-decoration-none" href="/monitoring/rooms/<%= rooms[index].room._id %>">
                         <div class="p-2 px-10 text-dark bg-white shadow-sm bg-body rounded">
-                            <div class=" text-black text-decoration-none my-3" >
+                            <a class="btn btn-danger btn-sm float-sm-end" role="button" id="deleteRoom" onclick="deleteRoom('<%= rooms[index].room._id %>')"><i class="bi bi-trash3"></i></a><br>
+                            <a class="text-decoration-none" href="/monitoring/rooms/<%= rooms[index].room._id %>">
+                            <div class="text-black text-decoration-none my-3" >
                                 <img src="/public/images/room.png" alt="hugenerd" width="20%" class="">
-                                <h4><%= (rooms[index].room.name) %> Room</h4>
+                                <h4 class="text-black" style="color: black;"><%= (rooms[index].room.name) %> Room</h4>
                                 <span class="d-none d-sm-inline mx-1 text-blue"><%= (rooms[index].beds.length) %> Beds</span>
                             </div>
+                            </a>
                         </div>
-                        </a>
                     </div>
                 <% } %>
                 <% index++; %> 
@@ -75,6 +76,30 @@
             create(roomName).then(data => {
                 if(data.status == 200){
                     window.location = `/monitoring/rooms`;
+                }
+            })
+        }
+    }
+    async function deleteRoomFetch(roomID) {
+        const response = await fetch('/rooms/'+roomID, {
+            method: 'DELETE',
+        });
+        const data = await response.json();
+        const newData = {
+            data,
+            status: response.status
+        }
+        return newData;
+    }
+    function deleteRoom(roomID){
+        var result = confirm('Are you sure to delete the Room?');
+        if(result){
+            deleteRoomFetch(roomID).then(data => {
+                if(data.status == 200){
+                    window.location = `/monitoring/rooms`;
+                }
+                else{
+                    alert('Cant delete this Room');
                 }
             })
         }
