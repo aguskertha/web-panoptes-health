@@ -8,6 +8,10 @@ var app = express();
 const expressLayouts = require('express-ejs-layouts');
 const schedule = require('node-schedule')
 const axiosLib = require('axios')
+const flash = require('connect-flash');
+const session = require('express-session');
+const passport = require('passport');
+require('./src/utils/passport')(passport);
 require('dotenv').config();
 const axios = axiosLib.create({baseURL: process.env.APP_HOST});
 
@@ -19,6 +23,25 @@ app.use(cors());
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.use(session({
+  secret: 'secret',
+  resave: true,
+  saveUninitialized: true,
+}));
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.use(flash());
+
+app.use((req, res, next) => {
+  res.locals.success_msg = req.flash('success_msg');
+  res.locals.error_msg = req.flash('error_msg');
+  res.locals.error = req.flash('error');
+  next();
+});
+
 app.use(cookieParser());
 app.use('/public',express.static(path.join(__dirname, 'public')));
 

@@ -7,7 +7,7 @@ const renderDashboardPage = async (req, res, next) => {
         const patients = await axios.get('/patients');
         const devices = await axios.get('/devices');
         const rooms = await axios.get('/rooms');
-
+        
         const getData  = async (bedData) => {
             let bed = await JSON.parse(JSON.stringify(bedData));
                 
@@ -53,6 +53,7 @@ const renderDashboardPage = async (req, res, next) => {
             patients: patients.data,
             devices: devices.data,
             rooms: data,
+            name: req.user.name
         })
     } catch (error) {
         res.status(400).json({message: error.toString()});
