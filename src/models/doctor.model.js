@@ -2,12 +2,12 @@ const mongoose = require('mongoose');
 const mongoosePaginate = require('mongoose-paginate-v2');
 const Schema = mongoose.Schema;
 const moment = require('moment');
-const patientSchema = new Schema({
+const doctorSchema = new Schema({
     name: {
         type: String,
         required: true
     },
-    NIK: {
+    NIP: {
         type: String,
         required: true,
         unique: true
@@ -16,23 +16,14 @@ const patientSchema = new Schema({
         type: Number,
         required: true
     },
-    bornDate: {
+    type: {
+        type: Number,
+        required: true
+    },
+    typeName: {
         type: String,
-        required: true
     },
-    address: {
-        type: String,
-        required: true
-    },
-    
-    contact: {
-        type: String,
-        required: true
-    },
-    status: {
-        type: Boolean,
-        required: true
-    },
+
 
     createdAt: {
         type: String
@@ -42,16 +33,16 @@ const patientSchema = new Schema({
     }
 });
 
-patientSchema.pre('save', function(next){
+doctorSchema.pre('save', function(next){
     this.createdAt = moment().format();
     this.updatedAt = moment().format();
     next();
 });
 
-patientSchema.pre('updateOne', function(next){
+doctorSchema.pre('updateOne', function(next){
     this.update({},{ $set: { updatedAt: moment().format() } });
     next();
 });
-patientSchema.plugin(mongoosePaginate);
-const Patient = mongoose.model('Patient', patientSchema);
-module.exports = Patient;
+doctorSchema.plugin(mongoosePaginate);
+const Doctor = mongoose.model('Doctor', doctorSchema);
+module.exports = Doctor;
