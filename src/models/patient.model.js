@@ -33,6 +33,9 @@ const patientSchema = new Schema({
         type: Boolean,
         required: true
     },
+    doctorID: {
+        type: String,
+    },
 
     createdAt: {
         type: String

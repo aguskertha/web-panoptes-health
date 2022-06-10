@@ -10,6 +10,7 @@ const connectedRouter = require('./connected.route')
 const userRouter = require('./user.route')
 const doctorRouter = require('./doctor.route')
 const doctorPageRouter = require('./doctor-page.route')
+const patientPageRouter = require('./patient-page.route')
 const {ensureAuthenticated} = require('./../middleware/auth');
 
 router.use('/sensors', sensorRouter);
@@ -19,6 +20,7 @@ router.use('/rooms', roomRouter);
 router.use('/beds', bedRouter);
 router.use('/doctors', doctorRouter);
 router.use('/doctor-page', ensureAuthenticated, doctorPageRouter);
+router.use('/patient-page', ensureAuthenticated, patientPageRouter);
 router.use('/dashboard', ensureAuthenticated, dashboardRouter);
 router.use('/monitoring', ensureAuthenticated, monitoringRouter);
 router.use('/connected', ensureAuthenticated, connectedRouter);

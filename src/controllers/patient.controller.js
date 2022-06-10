@@ -1,18 +1,19 @@
 const Patient = require('./../models/patient.model');
+const Doctor = require('./../models/doctor.model');
 const Bed = require('./../models/bed.model');
 
 const ObjectID = require('mongodb').ObjectId;
 
 const createPatient = async (req, res, next) => {
     try {
-        const {name, NIK, age, bornDate, address, contact} = req. body;
+        const {name, NIK, age, bornDate, address, contact, doctorID} = req. body;
         //need validation NIK length, valid contact num
         
         const patient = await Patient.findOne({NIK: NIK})
         if(patient){
             throw 'Patient already registered!'
         }
-        const newPatient = new Patient({name, NIK, age, bornDate, address, contact, status: false});
+        const newPatient = new Patient({name, NIK, age, bornDate, address, contact, status: false, doctorID});
         await newPatient.save();
         res.json({message: 'Patient registered!'})
 
@@ -109,7 +110,20 @@ const disconnectPatientToBed = async (req, res, next) => {
 const getPatients = async (req, res, next) => {
     try {
         const patients = await Patient.find()
-        res.json(patients)
+        const getPatients = async (patient) => {
+            const doctor = await Doctor.findOne({_id: ObjectID(patient.doctorID)})
+            const data = await JSON.parse(JSON.stringify(patient));
+            data.doctor = doctor
+            return data
+        }
+
+        let promises = []
+        patients.forEach(patient => {
+            promises.push(getPatients(patient))
+        });
+
+        const data = await Promise.all(promises)
+        res.json(data)
     } catch (error) {
         res.status(400).json({message: error.toString()});
     }

@@ -1,0 +1,48 @@
+<div class="container-fluid bg-white shadow-sm bg-body rounded py-3 m-3">
+    <a class="btn btn-primary mb-3" href="/patient-page/create" role="button"><i class="bi bi-plus-square"></i> Patient</a>
+    <table class="table caption-top table-paginate-patient flex" cellspacing="0" width="100%">
+        <caption class="h3 mt-2">Patient List</caption>
+        <thead>
+            <tr>
+                <th scope="col">No</th>
+                <th scope="col">Name</th>
+                <th scope="col">NIK</th>
+                <th scope="col">Age</th>
+                <th scope="col">Born Date</th>
+                <th scope="col">Address</th>
+                <th scope="col">Contact</th>
+                <th scope="col">Doctor</th>
+                <th scope="col">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% for( let index = 0; index < patients.length; index++ ) { %>
+                <% const patient = patients[index] %> 
+                <% let doctorName = '-' %>
+                <% if (patient.doctor != null) { %>
+                    <% doctorName = patient.doctor.name %>
+                <% } %> 
+                <tr>
+                    <th scope="row"><%= index+1 %> </th>
+                    <td><%= patient.name %></td>
+                    <td><%= patient.NIK %></td>
+                    <td><%= patient.age %></td>
+                    <td><%= patient.bornDate %></td>
+                    <td><%= patient.address %></td>
+                    <td><%= patient.contact %></td>
+                    <td><%= doctorName %></td>
+                    <td>@mdo</td>
+                </tr>
+            <% } %>
+          
+        </tbody>
+      </table>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.table-paginate-patient').DataTable();
+    });
+</script>
