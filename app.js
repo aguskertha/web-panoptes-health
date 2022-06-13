@@ -47,8 +47,8 @@ app.use('/public',express.static(path.join(__dirname, 'public')));
 
 schedule.scheduleJob('*/10 * * * *', async () => {
   try {
-    await axios.delete('/sensors');
-    console.log('Deleted sensors')
+    // await axios.delete('/sensors');
+    // console.log('Deleted sensors')
   } catch (error) {
     console.log(error.toString())
   }

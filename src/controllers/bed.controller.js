@@ -1,7 +1,8 @@
 const Room = require('./../models/room.model')
 const Bed = require('./../models/bed.model')
 const Device = require('./../models/device.model')
-const Patient = require('./../models/patient.model')
+const Patient = require('./../models/patient.model');
+const Sensor = require('../models/sensor.model');
 const ObjectID = require('mongodb').ObjectId;
 
 const createBed = async (req, res, next) => {
@@ -78,16 +79,34 @@ const getBedsConnected = async (req, res, next) => {
             const device = await Device.findOne({_id: ObjectID(bed.deviceID)})
             const patient = await Patient.findOne({_id: ObjectID(bed.patientID)})
             const room = await Room.findOne({_id: ObjectID(bed.roomID)})
+            const sensors = await Sensor.find({bedID: bed._id}).sort({createdAt: -1})
+            const sensor = sensors[0]
             const newData = {
                 bed,
                 device,
                 patient,
-                room
+                room,
+                sensor
+            }
+            if(sensor){
+                if((sensor.heartRate < 60 || sensor.heartRate > 100) && (sensor.oxiRate < 95 || sensor.oxiRate > 100) ){
+                    newData.status = 3
+                }
+                else if ((sensor.heartRate < 60 || sensor.heartRate > 100) || (sensor.oxiRate < 95 || sensor.oxiRate > 100)){
+                    newData.status = 2
+                }
+                else{
+                    newData.status = 1
+                }
             }
             newDatas.push(newData)
         }
+        newDatas.sort(function(a, b) {
+            return b.status - a.status;
+        });
         res.json(newDatas)
     } catch (error) {
+        console.log(error.toString())
         res.status(400).json({message: error.toString()});
     }
 }

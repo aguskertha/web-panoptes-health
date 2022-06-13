@@ -1,6 +1,22 @@
-<div class="container-fluid bg-white shadow-sm bg-body rounded py-3 m-3"> 
-    <table class="table caption-top table-paginate-device" cellspacing="0" width="100%">
-        <caption class="h3 mt-2">Patient Connected</caption>
+<style>
+    table {
+    border-collapse: separate;
+    border-spacing: 0 15px;
+    }
+    th,
+    td {
+    text-align: center;
+    border: 1px solid black;
+    padding: 5px;
+    }
+</style>
+<div class="container-fluid bg-white shadow-sm bg-body rounded py-3 m-3">
+    <h2 class="mb-4">Patient Connected</h2>
+    <div class="form-check form-switch">
+        <input class="form-check-input" type="checkbox" role="switch" id="switch" checked />
+        <label class="form-check-label" for="flexSwitchCheckDefault">Real-time</label>
+      </div> 
+    <table class="table-paginate-device" cellspacing="0" width="100%">
         <thead>
             <tr>
                 <th scope="col">No</th>
@@ -8,19 +24,30 @@
                 <th scope="col">Device</th>
                 <th scope="col">Room</th>
                 <th scope="col">Bed</th>
+                <th scope="col">HeartRate</th>
+                <th scope="col">OxiRate</th>
                 <th scope="col">Action</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody id="tableBody">
             <% for( let index = 0; index < beds.length; index++ ) { %>
                 <% const bed = beds[index] %> 
+                <% let color = 'danger' %>
+                <% if (bed.status == 1) { %>
+                    <% color = 'success' %> 
+                <% }else if(bed.status == 2){ %>
+                    <% color = 'warning' %> 
+                <% } %>
+
                 <tr>
-                    <th scope="row"><%= index+1 %> </th>
-                    <td><%= bed.patient.name %></td>
-                    <td><%= bed.device.name %></td>
-                    <td><%= bed.room.name %></td>
-                    <td><%= bed.bed.name %></td>
-                    <td><a class="btn btn-info btn-sm" role="button" href="/monitoring/rooms/<%= bed.room._id %>/beds/<%= bed.bed._id %>"><i class="bi bi-bar-chart"></i></button></a></td>
+                    <th scope="row" class="border border-<%= color %> border-2"><%= index+1 %> </th>
+                    <td class="border border-<%= color %> border-2"><%= bed.patient.name %></td>
+                    <td class="border border-<%= color %> border-2"><%= bed.device.name %></td>
+                    <td class="border border-<%= color %> border-2"><%= bed.room.name %></td>
+                    <td class="border border-<%= color %> border-2"><%= bed.bed.name %></td>
+                    <td class="border border-<%= color %> border-2"><%= typeof bed.sensor != 'undefined' ? bed.sensor.heartRate.toFixed(0) : '' %></td>
+                    <td class="border border-<%= color %> border-2"><%= typeof bed.sensor != 'undefined' ? bed.sensor.oxiRate.toFixed(0) : '' %></td>
+                    <td class="border border-<%= color %> border-2"><a class="btn btn-info btn-sm" role="button" href="/monitoring/rooms/<%= bed.room._id %>/beds/<%= bed.bed._id %>"><i class="bi bi-bar-chart"></i></button></a></td>
                 </tr>  
             <% } %>
           
@@ -34,4 +61,97 @@
     $(document).ready(function () {
         $('.table-paginate-device').DataTable();
     });
+
+    
+    async function getData() {
+        const response = await fetch('/beds/connected', {
+            method: 'GET',
+        });
+        const beds = await response.json();
+        const newData = {
+            beds,
+            status: response.status
+        }
+        return newData;
+    }
+    // var refreshIntervalId = null;
+    var refreshIntervalId = setInterval(function(e){
+        var wrapper = $("#tableBody"); 
+        $(wrapper).empty();
+        getData().then(data => {
+            if(data.status == 200){
+                const beds = data.beds
+                for (let index = 0; index < beds.length; index++) {
+                    const bed = beds[index];
+                    let color = 'danger'
+                    if (bed.status == 1) { 
+                        color = 'success' 
+                    }
+                    else if(bed.status == 2){ 
+                        color = 'warning' 
+                    } 
+
+                    $(wrapper).append(
+                    `
+                    <tr>
+                        <th scope="row" class="border border-${color} border-2">${index+1} </th>
+                        <td class="border border-${color} border-2">${bed.patient.name}</td>
+                        <td class="border border-${color} border-2">${bed.device.name}</td>
+                        <td class="border border-${color} border-2">${bed.room.name}</td>
+                        <td class="border border-${color} border-2">${bed.bed.name}</td>
+                        // <td class="border border-${color} border-2">${typeof bed.sensor != 'undefined' ? bed.sensor.heartRate.toFixed(0) : ''}</td>
+                        // <td class="border border-${color} border-2">${typeof bed.sensor != 'undefined' ? bed.sensor.oxiRate.toFixed(0) : ''}</td>
+                        <td class="border border-${color} border-2"><a class="btn btn-info btn-sm" role="button" href="/monitoring/rooms/${bed.room._id}/beds/${bed.bed._id}"><i class="bi bi-bar-chart"></i></button></a></td>
+                    </tr>  
+                    `
+                    );
+                }
+            }
+        })
+    }, 1000);
+
+    $('#switch').on('change', function(){
+        var data = $('#switch');
+        if($('#switch').is(":checked")){
+            refreshIntervalId = setInterval(function(e){
+                var wrapper = $("#tableBody"); 
+                $(wrapper).empty();
+                getData().then(data => {
+                    if(data.status == 200){
+                        const beds = data.beds
+                        for (let index = 0; index < beds.length; index++) {
+                            const bed = beds[index];
+                            let color = 'danger'
+                            if (bed.status == 1) { 
+                                color = 'success' 
+                            }
+                            else if(bed.status == 2){ 
+                                color = 'warning' 
+                            } 
+
+                            $(wrapper).append(
+                            `
+                            <tr>
+                                <th scope="row" class="border border-${color} border-2">${index+1} </th>
+                                <td class="border border-${color} border-2">${bed.patient.name}</td>
+                                <td class="border border-${color} border-2">${bed.device.name}</td>
+                                <td class="border border-${color} border-2">${bed.room.name}</td>
+                                <td class="border border-${color} border-2">${bed.bed.name}</td>
+                                <td class="border border-${color} border-2">${bed.sensor.heartRate.toFixed(0)}</td>
+                                <td class="border border-${color} border-2">${bed.sensor.oxiRate.toFixed(0)}</td>
+                                <td class="border border-${color} border-2"><a class="btn btn-info btn-sm" role="button" href="/monitoring/rooms/${bed.room._id}/beds/${bed.bed._id}"><i class="bi bi-bar-chart"></i></button></a></td>
+                            </tr>  
+                            `
+                            );
+                        }
+                    }
+                })
+            }, 1000);
+        }
+        else{
+            clearInterval(refreshIntervalId);
+        }
+    })
+
+    
 </script>

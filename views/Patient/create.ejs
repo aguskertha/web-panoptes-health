@@ -79,7 +79,9 @@
 
             <div class="form-group mt-3">
             <label for="doctor">Doctor</label>
-            <select class="form-select" name="doctorID" aria-label="Default select example">
+            <input type="hidden" value="" name="doctorID" id="hide">
+            <input class="form-control" list="datalistOptions" id="doctorID" placeholder="Type to search Doctor..." value="">
+            <datalist id="datalistOptions">
                 <option value="" selected>Choose Doctor</option>
                 <% for( let index = 0; index < doctors.length; index++ ) { %>
                 <% const doctor = doctors[index] %> 
@@ -91,7 +93,7 @@
                 <% } %>
                 <option value="<%= doctor._id %>"><%= label %></option>
                 <% } %>
-            </select>
+            </datalist>
             </div>
             
             
@@ -103,3 +105,14 @@
     </div>
  
 </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    $(function(){
+        $('#doctorID').on('change', function(){
+            var selectedValue = $(this).val();
+            console.log(selectedValue)
+            $('input:hidden').val(selectedValue);
+        }) 
+
+    })
+</script>
